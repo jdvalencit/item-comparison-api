@@ -1,0 +1,14 @@
+{
+  "id": 1,
+  "name": "Laptop 4000",
+  "description": "Gaming laptop",
+  "price": 24200,
+  "brand": "TechBrand-2",
+  "image_url": "http://example.com/laptop.jpg",
+  "rating": 4,
+  "specifications": {
+    "cpu": "Intel i7",
+    "ram": "32GB",
+    "storage": "1TB SSD"
+  }
+}

@@ -6,12 +6,16 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func SetupRouter() *chi.Mux {
+func SetupRouter(handler *api.ProductHandler) *chi.Mux {
 	r := chi.NewRouter()
 
 	r.Route("/api/v1/products", func(r chi.Router) {
-		r.Get("/", api.ListProducts)
-		//r.Get("/{id}", api.GetProduct)
+		r.Get("/", handler.ListProducts)
+		r.Post("/", handler.SaveProducts)
+		r.Put("/", handler.UpdateProducts)
+		r.Delete("/{id}", handler.DeleteProduct)
+		r.Get("/{id}", handler.GetProduct)
+		r.Post("/compare", handler.CompareProducts)
 	})
 
 	return r

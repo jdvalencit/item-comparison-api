@@ -1,0 +1,12 @@
+{
+  "id": 3,
+  "name": "Auriculares Pro",
+  "price": 199.9,
+  "brand": "SoundMax",
+  "image_url": "http://example.com/headphones.jpg",
+  "rating": 4.8,
+  "specifications": {
+    "noise_cancelling": "true",
+    "type": "Wireless"
+  }
+}

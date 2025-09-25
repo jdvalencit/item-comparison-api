@@ -7,6 +7,6 @@ type Product struct {
 	Price          float64           `json:"price"`
 	Brand          string            `json:"brand"`
 	Image_url      string            `json:"image_url"`
-	Rating         float32           `json:"rating"`
+	Rating         float64           `json:"rating"`
 	Specifications map[string]string `json:"specifications"`
 }
