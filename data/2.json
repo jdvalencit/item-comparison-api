@@ -1,0 +1,12 @@
+{
+  "id": 2,
+  "name": "Smartphone Z10",
+  "price": 800.99,
+  "brand": "PhoneCorp",
+  "image_url": "http://example.com/phone.jpg",
+  "rating": 4.2,
+  "specifications": {
+    "battery": "4000mAh",
+    "screen": "6.1 inch OLED"
+  }
+}
