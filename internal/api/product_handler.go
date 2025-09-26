@@ -17,16 +17,12 @@ func NewProductHandler(s *services.ProductService) *ProductHandler {
 	return &ProductHandler{service: s}
 }
 
-// modify this function to use the repository pattern and call the service layer
-func (h *ProductHandler) ListProducts(w http.ResponseWriter, r *http.Request) {
-	products, err := h.service.GetAllProducts()
+func (h *ProductHandler) LoadProducts(w http.ResponseWriter, r *http.Request) {
+	responseProducts, err := h.service.LoadProducts()
 	if err != nil {
 		http.Error(w, "Failed to load products: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	// Map product models to response DTOs
-	responseProducts := services.ProductsToResponses(products)
 
 	// Respond with the list of products in JSON format
 	w.Header().Set("Content-Type", "application/json")
@@ -34,20 +30,22 @@ func (h *ProductHandler) ListProducts(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *ProductHandler) SaveProducts(w http.ResponseWriter, r *http.Request) {
+	// Validate if the x-seller-id header is present
+	sellerID := r.Header.Get("x-seller-id")
+	if sellerID == "" {
+		http.Error(w, "Missing x-seller-id header", http.StatusBadRequest)
+		return
+	}
 
 	// Decode new products from request body
-	//var newProducts []models.Product
-	var req []dto.ProductRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+	var newProductsRequest []dto.ProductRequest
+	if err := json.NewDecoder(r.Body).Decode(&newProductsRequest); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	// Map request DTOs to product models
-	newProducts := services.ProductsFromRequests(req)
-
 	// Save all products
-	if err := h.service.SaveAllProducts(newProducts); err != nil {
+	if err := h.service.SaveProducts(newProductsRequest, sellerID); err != nil {
 		http.Error(w, "Failed to save products: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -58,20 +56,22 @@ func (h *ProductHandler) SaveProducts(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *ProductHandler) UpdateProducts(w http.ResponseWriter, r *http.Request) {
+	// Validate if the x-seller-id header is present
+	sellerID := r.Header.Get("x-seller-id")
+	if sellerID == "" {
+		http.Error(w, "Missing x-seller-id header", http.StatusBadRequest)
+		return
+	}
 
 	// Decode updated products from request body
-	//var updatedProducts []models.Product
-	var req []dto.ProductRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+	var updatedProductsRequest []dto.ProductRequest
+	if err := json.NewDecoder(r.Body).Decode(&updatedProductsRequest); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	// Map request DTOs to product models
-	updatedProducts := services.ProductsFromRequests(req)
-
 	// Update products
-	if err := h.service.UpdateProducts(updatedProducts); err != nil {
+	if err := h.service.UpdateProducts(updatedProductsRequest, sellerID); err != nil {
 		http.Error(w, "Failed to update products: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -98,14 +98,11 @@ func (h *ProductHandler) CompareProducts(w http.ResponseWriter, r *http.Request)
 	}
 
 	// Compare products by IDs
-	products, err := h.service.CompareProducts(req.IDs)
+	responseProducts, err := h.service.CompareProducts(req.IDs)
 	if err != nil {
 		http.Error(w, "Failed to compare products: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	// Map product models to response DTOs
-	responseProducts := services.ProductsToResponses(products)
 
 	// Respond with the compared products in JSON format
 	w.Header().Set("Content-Type", "application/json")
@@ -128,18 +125,15 @@ func (h *ProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get product by ID
-	product, err := h.service.GetProductByID(id)
+	responseProduct, err := h.service.GetProductByID(id)
 	if err != nil {
 		http.Error(w, "Failed to get product: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if product == nil {
+	if responseProduct == nil {
 		http.Error(w, "Product not found", http.StatusNotFound)
 		return
 	}
-
-	// Map product model to response DTO
-	responseProduct := services.ProductToResponse(*product)
 
 	// Respond with the product in JSON format
 	w.Header().Set("Content-Type", "application/json")
@@ -147,6 +141,13 @@ func (h *ProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *ProductHandler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
+	// Validate if the x-seller-id header is present
+	sellerID := r.Header.Get("x-seller-id")
+	if sellerID == "" {
+		http.Error(w, "Missing x-seller-id header", http.StatusBadRequest)
+		return
+	}
+
 	// Extract product ID from URL parameters
 	idParam := r.URL.Path[strings.LastIndex(r.URL.Path, "/")+1:]
 	if idParam == "" {
@@ -162,7 +163,7 @@ func (h *ProductHandler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Delete product by ID
-	if err := h.service.DeleteProductByID(id); err != nil {
+	if err := h.service.DeleteProductByID(id, sellerID); err != nil {
 		http.Error(w, "Failed to delete product: "+err.Error(), http.StatusInternalServerError)
 		return
 	}

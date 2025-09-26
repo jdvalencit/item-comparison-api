@@ -10,7 +10,7 @@ func SetupRouter(handler *api.ProductHandler) *chi.Mux {
 	r := chi.NewRouter()
 
 	r.Route("/api/v1/products", func(r chi.Router) {
-		r.Get("/", handler.ListProducts)
+		r.Get("/", handler.LoadProducts)
 		r.Post("/", handler.SaveProducts)
 		r.Put("/", handler.UpdateProducts)
 		r.Delete("/{id}", handler.DeleteProduct)

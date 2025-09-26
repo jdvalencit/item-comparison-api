@@ -8,4 +8,5 @@ type ProductResponse struct {
 	ImageUrl       string            `json:"image_url"`
 	Rating         float32           `json:"rating"`
 	Specifications map[string]string `json:"specifications"`
+	SellerID       string            `json:"seller_id"`
 }

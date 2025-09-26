@@ -28,6 +28,7 @@ func ProductToResponse(p models.Product) dto.ProductResponse {
 		Brand:    p.Brand,
 		ImageUrl: p.ImageUrl,
 		Rating:   p.Rating,
+		SellerID: p.SellerID,
 	}
 }
 
