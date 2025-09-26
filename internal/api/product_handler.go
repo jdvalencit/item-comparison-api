@@ -2,7 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"item-comparison-api/internal/models"
+	"item-comparison-api/internal/dto"
 	"item-comparison-api/internal/services"
 	"net/http"
 	"strconv"
@@ -25,19 +25,26 @@ func (h *ProductHandler) ListProducts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Map product models to response DTOs
+	responseProducts := services.ProductsToResponses(products)
+
 	// Respond with the list of products in JSON format
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(products)
+	json.NewEncoder(w).Encode(responseProducts)
 }
 
 func (h *ProductHandler) SaveProducts(w http.ResponseWriter, r *http.Request) {
 
 	// Decode new products from request body
-	var newProducts []models.Product
-	if err := json.NewDecoder(r.Body).Decode(&newProducts); err != nil {
+	//var newProducts []models.Product
+	var req []dto.ProductRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
+
+	// Map request DTOs to product models
+	newProducts := services.ProductsFromRequests(req)
 
 	// Save all products
 	if err := h.service.SaveAllProducts(newProducts); err != nil {
@@ -53,11 +60,15 @@ func (h *ProductHandler) SaveProducts(w http.ResponseWriter, r *http.Request) {
 func (h *ProductHandler) UpdateProducts(w http.ResponseWriter, r *http.Request) {
 
 	// Decode updated products from request body
-	var updatedProducts []models.Product
-	if err := json.NewDecoder(r.Body).Decode(&updatedProducts); err != nil {
+	//var updatedProducts []models.Product
+	var req []dto.ProductRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
+
+	// Map request DTOs to product models
+	updatedProducts := services.ProductsFromRequests(req)
 
 	// Update products
 	if err := h.service.UpdateProducts(updatedProducts); err != nil {
@@ -93,9 +104,12 @@ func (h *ProductHandler) CompareProducts(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	// Map product models to response DTOs
+	responseProducts := services.ProductsToResponses(products)
+
 	// Respond with the compared products in JSON format
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(products)
+	json.NewEncoder(w).Encode(responseProducts)
 }
 
 func (h *ProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
@@ -124,9 +138,12 @@ func (h *ProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Map product model to response DTO
+	responseProduct := services.ProductToResponse(*product)
+
 	// Respond with the product in JSON format
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(product)
+	json.NewEncoder(w).Encode(responseProduct)
 }
 
 func (h *ProductHandler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
