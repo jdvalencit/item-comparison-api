@@ -1,5 +1,6 @@
 package dto
 
+// ProductResponse represents the structure for product data sent in responses
 type ProductResponse struct {
 	ID             int               `json:"id"`
 	Name           string            `json:"name"`

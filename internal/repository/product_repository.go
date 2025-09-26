@@ -2,6 +2,7 @@ package repository
 
 import "item-comparison-api/internal/models"
 
+// ProductRepo defines the interface for product repository operations
 type ProductRepo interface {
 	LoadProducts() ([]models.Product, error)
 	SaveProducts([]models.Product) error

@@ -5,7 +5,7 @@ import (
 	"item-comparison-api/internal/models"
 )
 
-// Convierte de request a modelo
+// Maps from request dto to model
 func ProductFromRequest(req dto.ProductRequest) models.Product {
 	return models.Product{
 		ID:             req.ID,
@@ -19,7 +19,7 @@ func ProductFromRequest(req dto.ProductRequest) models.Product {
 	}
 }
 
-// Convierte de modelo a response
+// Maps from model to response dto
 func ProductToResponse(p models.Product) dto.ProductResponse {
 	return dto.ProductResponse{
 		ID:       p.ID,
@@ -32,7 +32,7 @@ func ProductToResponse(p models.Product) dto.ProductResponse {
 	}
 }
 
-// Devueve una lista de modelos a partir de una lista de requests
+// Maps a list of models form a list of requests
 func ProductsFromRequests(requests []dto.ProductRequest) []models.Product {
 	products := make([]models.Product, 0, len(requests))
 	for _, r := range requests {
@@ -41,7 +41,7 @@ func ProductsFromRequests(requests []dto.ProductRequest) []models.Product {
 	return products
 }
 
-// Convierte una lista de modelos a una lista de responses
+// Maps a list of responses from a list of models
 func ProductsToResponses(products []models.Product) []dto.ProductResponse {
 	responses := make([]dto.ProductResponse, 0, len(products))
 	for _, p := range products {

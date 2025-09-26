@@ -1,5 +1,6 @@
 package dto
 
+// ProductRequest represents the structure for product data received in requests
 type ProductRequest struct {
 	ID             int               `json:"id"`
 	Name           string            `json:"name" validate:"required"`

@@ -1,5 +1,6 @@
 package models
 
+// Product represents the structure for product data stored in the system
 type Product struct {
 	ID             int               `json:"id"`
 	Name           string            `json:"name"`
