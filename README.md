@@ -1,7 +1,5 @@
 # Item Comparison API
 
-A backend API for retrieving, saving, and managing products to enable item comparison. Products are stored as JSON files for simplicity and easy access.
-
 This project provides a lightweight backend API for managing product data, designed to support item comparison features. The API exposes endpoints to retrieve, create, update, and delete products.
 
 For simplicity, all products are stored as JSON files, which keeps the data human-readable, version-friendly, and easily accessible without requiring a database.
@@ -25,13 +23,17 @@ For simplicity, all products are stored as JSON files, which keeps the data huma
 
 ```
 item-comparison-api/
-├── api/         # HTTP handlers and routing
-├── services/    # Business logic for product management
-├── repository/  # Data access layer (read/write JSON files)
-├── dto/         # Data Transfer Objects (request/response payloads)
-├── models/      # Core domain models (e.g., Product)
-├── data/        # JSON files storing product data
-├── main.go      # Application entry point
+├── cmd/
+│   └── server/
+│       └── main.go        # Application entry point
+├── internal/
+│   ├── api/               # HTTP handlers and routing
+│   ├── services/          # Business logic for product management
+│   ├── repository/        # Data access layer (read/write JSON files)
+│   ├── dto/               # Data Transfer Objects (request/response payloads)
+│   ├── models/            # Core domain models (e.g., Product)
+│   ├── data/              # JSON files storing product data
+│   └── router.go          # HTTP router setup
 ```
 
 - **api/**: Defines HTTP endpoints and request handling logic.
@@ -187,12 +189,13 @@ DELETE /products/8
 
 ## 📂 Data Storage
 
-Product information is persisted as individual JSON files within the `./data` directory. Each product is stored in its own file, which makes the data:
-- Simple to manage – no database setup or migration is required.
-- Human-readable – files can be easily inspected and edited.
-- Portable – product data can be versioned, backed up, or shared without extra tooling.
+The project uses a non-structured file-based storage approach rather than a traditional database. Product information is persisted as individual JSON files in the `./data` directory
+
+This design choice was made because product data does not always share the same structure. Different products may include different fields or specifications. A non-structured format like JSON makes it easy to store and retrieve this flexible data without enforcing a rigid schema.
 
 ---
+hablar más sobre no estructurados más que json
+
 
 ## 🚀 Future Improvements
 
@@ -204,3 +207,5 @@ Due to limited time, some features and refinements were not implemented in the c
 - Authentication & Authorization – implement proper access controls (e.g., JWT) to ensure only authorized sellers can manage their products.
 - Automated testing – add unit tests and integration tests to ensure API reliability and prevent regressions.
 - Database integration – optionally migrate from JSON file storage to a database for scalability and performance.
+- Pagination and Metadata - Add pagination support and include additional response metadata (e.g., total count and page size) instead of returning a raw JSON array of products.
+- Universal Identifiers - Generate product IDs using a universally unique identifier (UUID) rather than relying on manually assigned IDs.
