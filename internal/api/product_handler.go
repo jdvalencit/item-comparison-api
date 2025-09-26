@@ -11,11 +11,11 @@ import (
 )
 
 type ProductHandler struct {
-	service *services.ProductService
+	service services.ProductServiceInterface
 }
 
 // NewProductHandler creates a new instance of ProductHandler
-func NewProductHandler(s *services.ProductService) *ProductHandler {
+func NewProductHandler(s services.ProductServiceInterface) *ProductHandler {
 	return &ProductHandler{service: s}
 }
 

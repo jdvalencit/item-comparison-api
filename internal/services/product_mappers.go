@@ -22,13 +22,15 @@ func ProductFromRequest(req dto.ProductRequest) models.Product {
 // Maps from model to response dto
 func ProductToResponse(p models.Product) dto.ProductResponse {
 	return dto.ProductResponse{
-		ID:       p.ID,
-		Name:     p.Name,
-		Price:    p.Price,
-		Brand:    p.Brand,
-		ImageUrl: p.ImageUrl,
-		Rating:   p.Rating,
-		SellerID: p.SellerID,
+		ID:             p.ID,
+		Name:           p.Name,
+		Description:    p.Description,
+		Price:          p.Price,
+		Brand:          p.Brand,
+		ImageUrl:       p.ImageUrl,
+		Rating:         p.Rating,
+		Specifications: p.Specifications,
+		SellerID:       p.SellerID,
 	}
 }
 
